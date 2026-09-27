@@ -16,7 +16,6 @@ KEEP="/etc/atomic-update.conf.d/${NAME}.conf"
 OLD_KEEP="/etc/atomic-update.conf.d/steamos-cec-bt-wake.conf"
 
 CEC_DEVICE="${CEC_DEVICE:-/dev/cec0}"
-CEC_DELAY="${CEC_DELAY:-5}"
 CEC_PHYS="${CEC_PHYSICAL_ADDRESS:-}"
 BT_VENDOR="${BT_VENDOR:-}"
 BT_PRODUCT="${BT_PRODUCT:-}"
@@ -65,7 +64,6 @@ write_hook() {
 # \$1 is pre|post. TV-off is left to SteamOS suspend_tv.
 case "\$1" in
   post)
-    sleep ${CEC_DELAY}
     if [[ -e ${CEC_DEVICE} ]]; then
       /usr/bin/cec-ctl -d ${CEC_DEVICE} --to 0 --image-view-on || true
       /usr/bin/cec-ctl -d ${CEC_DEVICE} --active-source phys-addr=${phys} || true
@@ -139,7 +137,6 @@ write_conf() {
   cat >"$ETC_CONF" <<EOF
 CEC_DEVICE=${CEC_DEVICE}
 CEC_PHYSICAL_ADDRESS=${phys}
-CEC_DELAY=${CEC_DELAY}
 BT_VENDOR=${vendor}
 BT_PRODUCT=${product}
 EOF
@@ -206,7 +203,6 @@ cmd_install() {
   log "installed"
   log "  CEC device     $CEC_DEVICE"
   log "  CEC phys addr  $CEC_PHYS"
-  log "  CEC delay      ${CEC_DELAY}s after resume"
   log "  hook           $HOOK"
   log "  BT USB         ${BT_VENDOR}:${BT_PRODUCT}"
   log "old steamos-cec-bt-wake CEC units disabled; BT udev from that project can stay until you --uninstall it"
@@ -254,7 +250,6 @@ $NAME
 Env overrides:
   CEC_DEVICE=/dev/cec0
   CEC_PHYSICAL_ADDRESS=4.0.0.0
-  CEC_DELAY=5
   BT_VENDOR=0e8d
   BT_PRODUCT=0616
 EOF
