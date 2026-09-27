@@ -19,26 +19,26 @@ TV **off** on sleep stays with SteamOS Settings → CEC / `suspend_tv`.
 ## Install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Sokhhi/steamos-s2idle-cec-bt/main/install.sh | sudo bash -s -- --install
+curl -fsSL https://raw.githubusercontent.com/Sokhii/steamos-s2idle-cec-bt/main/install.sh | sudo bash -s -- --install
 ```
 
 ## Verify
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Sokhhi/steamos-s2idle-cec-bt/main/install.sh | sudo bash -s -- --verify
+curl -fsSL https://raw.githubusercontent.com/Sokhii/steamos-s2idle-cec-bt/main/install.sh | sudo bash -s -- --verify
 ```
 
 ## Uninstall
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Sokhhi/steamos-s2idle-cec-bt/main/install.sh | sudo bash -s -- --uninstall
+curl -fsSL https://raw.githubusercontent.com/Sokhii/steamos-s2idle-cec-bt/main/install.sh | sudo bash -s -- --uninstall
 ```
 
 Optional overrides if autodetect is wrong:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/Sokhhi/steamos-s2idle-cec-bt/main/install.sh | sudo CEC_PHYSICAL_ADDRESS=4.0.0.0 bash -s -- --install
-curl -fsSL https://raw.githubusercontent.com/Sokhhi/steamos-s2idle-cec-bt/main/install.sh | sudo BT_VENDOR=0e8d BT_PRODUCT=0616 bash -s -- --install
+curl -fsSL https://raw.githubusercontent.com/Sokhii/steamos-s2idle-cec-bt/main/install.sh | sudo CEC_PHYSICAL_ADDRESS=4.0.0.0 bash -s -- --install
+curl -fsSL https://raw.githubusercontent.com/Sokhii/steamos-s2idle-cec-bt/main/install.sh | sudo BT_VENDOR=0e8d BT_PRODUCT=0616 bash -s -- --install
 ```
 
 Find BT IDs with `lsusb`. Find CEC address with `cec-ctl -d /dev/cec0`.
