@@ -6,15 +6,12 @@ This replaces the CEC half of [steamos-cec-bt-wake](https://github.com/xXJSONDer
 
 This installer instead:
 
-1. Drops a script in `/etc/systemd/system-sleep/` so it runs on **every** resume (`post`), including freeze/s2idle.
-2. Sends the same CEC packets that already work:
-   - `IMAGE_VIEW_ON` to the TV
-   - `ACTIVE_SOURCE` with your real physical address
-3. Enables USB `power/wakeup` on the Bluetooth radio (udev + boot service).
+1. Drops a script in `/etc/systemd/system-sleep/` so it runs on every sleep/resume, including freeze/s2idle.
+2. On sleep (`pre`): `cec-ctl --standby` to the TV.
+3. On resume (`post`): `IMAGE_VIEW_ON` and `ACTIVE_SOURCE` with your real physical address.
+4. Enables USB `power/wakeup` on the Bluetooth radio (udev + boot service).
 
-If the old project's `cec-wake.service` / `cec-sleep.service` are still present, they are disabled so the two wake paths do not fight.
-
-TV **off** on sleep stays with SteamOS Settings → CEC / `suspend_tv`.
+SteamOS `wake_tv` / `suspend_tv` can stay enabled. This hook does not disable other projects.
 
 ## Install
 

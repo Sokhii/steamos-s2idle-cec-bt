@@ -61,8 +61,13 @@ write_hook() {
   cat >"$HOOK" <<EOF
 #!/bin/bash
 # Installed by ${NAME}. Runs on every systemd sleep/resume.
-# \$1 is pre|post. TV-off is left to SteamOS suspend_tv.
+# \$1 is pre|post.
 case "\$1" in
+  pre)
+    if [[ -e ${CEC_DEVICE} ]]; then
+      /usr/bin/cec-ctl -d ${CEC_DEVICE} --to 0 --standby || true
+    fi
+    ;;
   post)
     if [[ -e ${CEC_DEVICE} ]]; then
       /usr/bin/cec-ctl -d ${CEC_DEVICE} --to 0 --image-view-on || true
@@ -160,16 +165,6 @@ ${KEEP}
 EOF
 }
 
-disable_old_cec_dbus() {
-  local unit
-  for unit in cec-wake.service cec-sleep.service; do
-    if systemctl list-unit-files "$unit" &>/dev/null; then
-      systemctl disable --now "$unit" 2>/dev/null || true
-      log "disabled old $unit (cecd D-Bus path)"
-    fi
-  done
-}
-
 cmd_install() {
   need_root
   command -v cec-ctl >/dev/null || die "cec-ctl not found"
@@ -193,8 +188,6 @@ cmd_install() {
   write_conf "$CEC_PHYS" "$BT_VENDOR" "$BT_PRODUCT"
   write_keep
 
-  disable_old_cec_dbus
-
   udevadm control --reload-rules
   udevadm trigger --subsystem-match=usb || true
   systemctl daemon-reload
@@ -205,7 +198,6 @@ cmd_install() {
   log "  CEC phys addr  $CEC_PHYS"
   log "  hook           $HOOK"
   log "  BT USB         ${BT_VENDOR}:${BT_PRODUCT}"
-  log "old steamos-cec-bt-wake CEC units disabled; BT udev from that project can stay until you --uninstall it"
 }
 
 cmd_uninstall() {
@@ -215,8 +207,7 @@ cmd_uninstall() {
   rm -rf "$PREFIX"
   udevadm control --reload-rules || true
   systemctl daemon-reload
-  log "removed ${NAME} files. Re-enable steamos-cec-bt-wake CEC units if you still want them:"
-  log "  sudo systemctl enable cec-wake.service cec-sleep.service"
+  log "removed ${NAME} files"
 }
 
 cmd_verify() {
